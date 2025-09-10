@@ -1,0 +1,14 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /xisufashion
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/xisufashion}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
