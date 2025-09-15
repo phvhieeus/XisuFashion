@@ -1,6 +1,7 @@
 package com.xisufashion.xisufashion.controller;
 
 import com.xisufashion.xisufashion.domain.Product;
+import com.xisufashion.xisufashion.dto.request.ProductCreateRequest;
 import com.xisufashion.xisufashion.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,15 +18,15 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        Product createdProduct = productService.createProduct(product);
+    public ResponseEntity<Product> createProduct(@RequestBody ProductCreateRequest request) {
+        Product createdProduct = productService.createProduct(request);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
-        if(product != null) {
+        if (product != null) {
             return new ResponseEntity<>(product, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -38,8 +39,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(id, product);
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductCreateRequest request) {
+        Product updatedProduct = productService.updateProduct(id, request);
         if (updatedProduct != null) {
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         }
@@ -48,7 +49,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-       productService.deleteProduct(id);
+        productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
