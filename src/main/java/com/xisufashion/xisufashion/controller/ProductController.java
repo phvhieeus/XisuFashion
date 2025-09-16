@@ -3,6 +3,7 @@ package com.xisufashion.xisufashion.controller;
 import com.xisufashion.xisufashion.domain.Product;
 import com.xisufashion.xisufashion.dto.request.ProductCreateRequest;
 import com.xisufashion.xisufashion.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductCreateRequest request) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductCreateRequest request) {
         Product createdProduct = productService.createProduct(request);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
@@ -39,7 +40,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductCreateRequest request) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductCreateRequest request) {
         Product updatedProduct = productService.updateProduct(id, request);
         if (updatedProduct != null) {
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);

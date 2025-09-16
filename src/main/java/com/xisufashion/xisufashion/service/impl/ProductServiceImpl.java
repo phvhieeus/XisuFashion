@@ -30,9 +30,7 @@ public class  ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
-        product.setMrpPrice(request.getMrpPrice());
-        product.setSellingPrice(request.getSellingPrice());
-        product.setDiscountPercent(request.getDiscountPercent());
+        product.setPrice(request.getPrice());
         product.setQuantity(request.getQuantity());
         product.setColor(request.getColor());
         product.setImages(request.getImages());
@@ -66,9 +64,7 @@ public class  ProductServiceImpl implements ProductService {
 
             existProduct.setName(request.getName());
             existProduct.setDescription(request.getDescription());
-            existProduct.setMrpPrice(request.getMrpPrice());
-            existProduct.setSellingPrice(request.getSellingPrice());
-            existProduct.setDiscountPercent(request.getDiscountPercent());
+            existProduct.setPrice(request.getPrice());
             existProduct.setQuantity(request.getQuantity());
             existProduct.setColor(request.getColor());
             existProduct.setImages(request.getImages());
