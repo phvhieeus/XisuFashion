@@ -1,5 +1,6 @@
 package com.xisufashion.xisufashion.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class Product {
     private String sizes;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
     private LocalDateTime createdAt;
