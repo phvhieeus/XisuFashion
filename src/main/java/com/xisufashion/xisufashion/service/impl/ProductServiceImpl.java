@@ -3,6 +3,7 @@ package com.xisufashion.xisufashion.service.impl;
 import com.xisufashion.xisufashion.domain.Category;
 import com.xisufashion.xisufashion.domain.Product;
 import com.xisufashion.xisufashion.dto.request.ProductCreateRequest;
+import com.xisufashion.xisufashion.exception.ResourceNotFoundException;
 import com.xisufashion.xisufashion.repository.CategoryRepository;
 import com.xisufashion.xisufashion.repository.ProductRepository;
 import com.xisufashion.xisufashion.service.ProductService;
@@ -14,18 +15,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class  ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
     @Override
     public Product createProduct(ProductCreateRequest request) {
-
-        Category category = categoryRepository.findById(request.getCategoryId()).orElse(null);
-        if (category == null) {
-            throw new RuntimeException("Category not found with id: " + request.getCategoryId());
-        }
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category not found with id: " + request.getCategoryId()));
 
         Product product = new Product();
         product.setName(request.getName());
@@ -45,7 +44,9 @@ public class  ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Product not found with id: " + id));
     }
 
     @Override
@@ -55,30 +56,32 @@ public class  ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Long id, ProductCreateRequest request) {
-        Product existProduct = productRepository.findById(id).orElse(null);
-        if (existProduct != null) {
-            Category category = categoryRepository.findById(request.getCategoryId()).orElse(null);
-            if (category == null) {
-                throw new RuntimeException("Category not found");
-            }
+        Product existProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Product not found with id: " + id));
 
-            existProduct.setName(request.getName());
-            existProduct.setDescription(request.getDescription());
-            existProduct.setPrice(request.getPrice());
-            existProduct.setQuantity(request.getQuantity());
-            existProduct.setColor(request.getColor());
-            existProduct.setImages(request.getImages());
-            existProduct.setSizes(request.getSizes());
-            existProduct.setCategory(category);
-            existProduct.setUpdatedAt(LocalDateTime.now());
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category not found with id: " + request.getCategoryId()));
 
-            return productRepository.save(existProduct);
-        }
-        return null;
+        existProduct.setName(request.getName());
+        existProduct.setDescription(request.getDescription());
+        existProduct.setPrice(request.getPrice());
+        existProduct.setQuantity(request.getQuantity());
+        existProduct.setColor(request.getColor());
+        existProduct.setImages(request.getImages());
+        existProduct.setSizes(request.getSizes());
+        existProduct.setCategory(category);
+        existProduct.setUpdatedAt(LocalDateTime.now());
+
+        return productRepository.save(existProduct);
     }
 
     @Override
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Product not found with id: " + id);
+        }
         productRepository.deleteById(id);
     }
 }
