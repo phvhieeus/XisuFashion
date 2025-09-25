@@ -7,6 +7,7 @@ import com.xisufashion.xisufashion.exception.ResourceNotFoundException;
 import com.xisufashion.xisufashion.repository.UserRepository;
 import com.xisufashion.xisufashion.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse createUser(UserCreateRequest req) {
@@ -26,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         user.setUsername(req.getUsername());
-        user.setPassword(req.getPassword());
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
         user.setFirstName(req.getFirstName());
         user.setLastName(req.getLastName());
 

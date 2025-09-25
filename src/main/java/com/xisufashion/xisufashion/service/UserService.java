@@ -1,7 +1,6 @@
 package com.xisufashion.xisufashion.service;
 
 
-import com.xisufashion.xisufashion.domain.User;
 import com.xisufashion.xisufashion.dto.request.UserCreateRequest;
 import com.xisufashion.xisufashion.dto.response.UserResponse;
 
