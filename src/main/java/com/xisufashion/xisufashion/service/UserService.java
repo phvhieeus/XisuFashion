@@ -1,6 +1,5 @@
 package com.xisufashion.xisufashion.service;
 
-
 import com.xisufashion.xisufashion.dto.request.UserCreateRequest;
 import com.xisufashion.xisufashion.dto.response.UserResponse;
 
@@ -8,13 +7,11 @@ import java.util.List;
 
 public interface UserService {
 
-    public UserResponse createUser(UserCreateRequest req);
+    UserResponse getUserById(Long id);
 
-    public UserResponse getUserById(Long id);
+    List<UserResponse> getAllUsers();
 
-    public List<UserResponse> getAllUsers();
+    UserResponse updateUser(Long id, UserCreateRequest req);
 
-    public UserResponse updateUser(Long id, UserCreateRequest req);
-
-    public void deleteUser(Long id);
+    void deleteUser(Long id);
 }

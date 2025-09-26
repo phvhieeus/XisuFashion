@@ -10,3 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  signerKey: ${JWT_SIGNER_KEY}
+  expiration: ${JWT_EXPIRATION}
