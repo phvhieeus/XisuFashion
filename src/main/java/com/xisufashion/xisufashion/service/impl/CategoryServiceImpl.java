@@ -1,6 +1,8 @@
 package com.xisufashion.xisufashion.service.impl;
 
 import com.xisufashion.xisufashion.domain.Category;
+import com.xisufashion.xisufashion.exception.InvalidDataException;
+import com.xisufashion.xisufashion.exception.ResourceNotFoundException;
 import com.xisufashion.xisufashion.repository.CategoryRepository;
 import com.xisufashion.xisufashion.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -21,26 +23,28 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll(); // Trả Entity trực tiếp
+        return categoryRepository.findAll();
     }
 
     @Override
     public Category updateCategory(Long id, Category category) {
-        Category existingCategory = categoryRepository.findById(id).orElse(null);
-        if (existingCategory != null) {
-            existingCategory.setName(category.getName());
-            return categoryRepository.save(existingCategory);
-        }
-        return null;
+        Category existingCategory = getCategoryById(id);
+        existingCategory.setName(category.getName());
+        return categoryRepository.save(existingCategory);
     }
 
     @Override
     public void deleteCategory(Long id) {
+        Category category = getCategoryById(id);
+        if (!category.getProducts().isEmpty()) {
+            throw new InvalidDataException("Cannot delete category with existing products");
+        }
         categoryRepository.deleteById(id);
     }
 }

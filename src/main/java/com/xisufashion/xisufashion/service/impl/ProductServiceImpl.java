@@ -10,7 +10,6 @@ import com.xisufashion.xisufashion.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,8 +35,6 @@ public class ProductServiceImpl implements ProductService {
         product.setSizes(request.getSizes());
         product.setCategory(category);
         product.setNumRatings(0);
-        product.setCreatedAt(LocalDateTime.now());
-        product.setUpdatedAt(LocalDateTime.now());
 
         return productRepository.save(product);
     }
@@ -56,9 +53,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Long id, ProductCreateRequest request) {
-        Product existProduct = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Product not found with id: " + id));
+        Product existProduct = getProductById(id);
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -72,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
         existProduct.setImages(request.getImages());
         existProduct.setSizes(request.getSizes());
         existProduct.setCategory(category);
-        existProduct.setUpdatedAt(LocalDateTime.now());
 
         return productRepository.save(existProduct);
     }
