@@ -5,6 +5,7 @@ import com.xisufashion.xisufashion.dto.request.LoginRequest;
 import com.xisufashion.xisufashion.dto.request.UserCreateRequest;
 import com.xisufashion.xisufashion.dto.response.AuthResponse;
 import com.xisufashion.xisufashion.dto.response.UserResponse;
+import com.xisufashion.xisufashion.enums.Role;
 import com.xisufashion.xisufashion.exception.InvalidDataException;
 import com.xisufashion.xisufashion.repository.UserRepository;
 import com.xisufashion.xisufashion.service.AuthService;
@@ -52,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidDataException("Invalid username or password");
         }
 
-        String accessToken = generateAccessToken(user.getUsername());
+        String accessToken = generateAccessToken(user.getUsername(), user.getRole());
         String refreshToken = UUID.randomUUID().toString();
 
         user.setRefreshToken(refreshToken);
@@ -77,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        user.setRole(request.getRole() != null ? request.getRole() : Role.USER);
 
         User savedUser = userRepository.save(user);
         log.info("Registration successful for username: {}", savedUser.getUsername());
@@ -102,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("Valid refresh token for user: {}", user.getUsername());
 
-        String newAccessToken = generateAccessToken(user.getUsername());
+        String newAccessToken = generateAccessToken(user.getUsername(), user.getRole());
         String newRefreshToken = UUID.randomUUID().toString();
 
         user.setRefreshToken(newRefreshToken);
@@ -153,10 +155,11 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private String generateAccessToken(String username) {
+    private String generateAccessToken(String username, Role role) {
         try {
             return Jwts.builder()
                     .setSubject(username)
+                    .claim("role", role.name())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration * 1000))
                     .signWith(SignatureAlgorithm.HS512, signerKey.getBytes())
@@ -174,6 +177,7 @@ public class AuthServiceImpl implements AuthService {
         response.setUsername(user.getUsername());
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
+        response.setRole(user.getRole());
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());
         return response;

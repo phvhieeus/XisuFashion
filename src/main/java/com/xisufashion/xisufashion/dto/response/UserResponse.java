@@ -1,5 +1,6 @@
 package com.xisufashion.xisufashion.dto.response;
 
+import com.xisufashion.xisufashion.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class UserResponse {
     private String firstName;
 
     private String lastName;
+
+    private Role role;
 
     private LocalDateTime createdAt;
 

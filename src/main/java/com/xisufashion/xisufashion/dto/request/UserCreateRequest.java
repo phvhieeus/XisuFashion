@@ -1,5 +1,6 @@
 package com.xisufashion.xisufashion.dto.request;
 
+import com.xisufashion.xisufashion.enums.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -22,4 +23,6 @@ public class UserCreateRequest {
 
     @NotBlank(message = "Last name cannot be blank")
     private String lastName;
+
+    private Role role; // optional, default USER
 }

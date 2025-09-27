@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
         userResponse.setUsername(user.getUsername());
         userResponse.setFirstName(user.getFirstName());
         userResponse.setLastName(user.getLastName());
+        userResponse.setRole(user.getRole()); // thêm dòng này
         userResponse.setCreatedAt(user.getCreatedAt());
         userResponse.setUpdatedAt(user.getUpdatedAt());
         return userResponse;
